@@ -5,14 +5,12 @@ http://blog.netgloo.com/2014/10/06/spring-boot-data-access-with-jpa-hibernate-an
 
 ### Usage
 
+- Setup mysql database with database name insantani and use port 3036
 - Run the application and go on http://localhost:8080/
 - Use the following urls to invoke controllers methods and see the interactions
   with the database:
-    * `/user/save?email=[email]&name=[name]`: create a new user with an 
-      auto-generated id and email and name as passed values.
-    * `/user/delete?id=[id]`: delete the user with the passed id.
-    * `/user/get-by-email?email=[email]`: retrieve the id for the user with the
-      passed email address.
+    * `api/vegetable/find?name=[name]`: find a vegetable based on name.
+    * `api/vegetable/sugesstion?name=[name]`: find sugesstions of vegetable maximum 4 sugesstions.
 
 ### Build and run
 
