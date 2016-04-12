@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * Represents an User for this web application.
  */
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 public class User {
 
   // ------------------------
@@ -28,6 +28,9 @@ public class User {
   @NotNull
   private String name;
 
+  @NotNull
+  private String password;
+
   // ------------------------
   // PUBLIC METHODS
   // ------------------------
@@ -38,9 +41,10 @@ public class User {
     this.id = id;
   }
 
-  public User(String email, String name) {
+  public User(String email, String name, String password) {
     this.email = email;
     this.name = name;
+    this.password = password;
   }
 
   public long getId() {
@@ -67,4 +71,12 @@ public class User {
     this.name = value;
   }
   
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
 } // class User

@@ -56,10 +56,10 @@ public class VegetableDao {
   /**
    * Return the user having the passed email.
    */
-  public Vegetable getByName(String email) {
+  public Vegetable getByName(String name) {
     return (Vegetable) entityManager.createQuery(
-        "from Vegetable where name =:email")
-        .setParameter("email", email)
+        "from Vegetable where name like :name")
+        .setParameter("name", name)
         .getSingleResult();
   }
 
@@ -78,10 +78,10 @@ public class VegetableDao {
     return;
   }
 
-  public List<Vegetable> getSugesstionByName(String email) {
+  public List<Vegetable> getSugesstionByName(String name) {
 	 return (List<Vegetable>) entityManager.createQuery(
-        "from Vegetable where name like :email")
-        .setParameter("email", email)
+        "from Vegetable where name like :name")
+        .setParameter("name", "%"+name+"%")
         .setMaxResults(4)
         .getResultList();
   }

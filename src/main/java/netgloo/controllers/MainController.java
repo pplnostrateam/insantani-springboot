@@ -10,8 +10,7 @@ public class MainController {
   @RequestMapping("/")
   @ResponseBody
   public String index() {
-    return "Spring boot mysql JPA Hibernate Proudly handcrafted by " +
-        "<a href='http://netgloo.com/en'>netgloo</a> :)";
+    return "Spring boot mysql JPA Hibernate, read http://docs.insantaninostra.apiary.io for API docummentation";
   }
 
 }

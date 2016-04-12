@@ -22,11 +22,11 @@ public class UserController {
    * Create a new user with an auto-generated id and email and name as passed 
    * values.
    */
-  @RequestMapping(value="/create")
+  @RequestMapping(value="api/user/create")
   @ResponseBody
-  public String create(String email, String name) {
+  public String create(String email, String name, String password) {
     try {
-      User user = new User(email, name);
+      User user = new User(email, name, password);
       userDao.create(user);
     }
     catch (Exception ex) {
@@ -38,7 +38,7 @@ public class UserController {
   /**
    * Delete the user with the passed id.
    */
-  @RequestMapping(value="/delete")
+  @RequestMapping(value="api/user/delete")
   @ResponseBody
   public String delete(long id) {
     try {
@@ -54,7 +54,7 @@ public class UserController {
   /**
    * Retrieve the id for the user with the passed email address.
    */
-  @RequestMapping(value="/get-by-email")
+  @RequestMapping(value="api/user/find")
   @ResponseBody
   public String getByEmail(String email) {
     String userId;
@@ -71,7 +71,7 @@ public class UserController {
   /**
    * Update the email and the name for the user indentified by the passed id.
    */
-  @RequestMapping(value="/update")
+  @RequestMapping(value="api/user/update")
   @ResponseBody
   public String updateName(long id, String email, String name) {
     try {

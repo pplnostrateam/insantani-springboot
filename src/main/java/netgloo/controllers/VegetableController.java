@@ -36,8 +36,7 @@ public class VegetableController {
 		try {
 			user = vegetableDao.getByName(name);
 		}catch (Exception ex) {
-      	    //return "User not found: " + ex.toString();
-        	user = new Vegetable("vegetable not found" + ex.toString(),0,0);
+        	user = new Vegetable("vegetable not found",0,0);
         }
         return user;
 	}
@@ -49,7 +48,7 @@ public class VegetableController {
 		try{
 			result = vegetableDao.getSugesstionByName(name);
 		} catch (Exception ex) {
-			Vegetable x = new Vegetable("vegetable not found" + ex.toString(),0,0);
+			Vegetable x = new Vegetable("vegetable not found",0,0);
 			List<Vegetable> asd = new ArrayList<Vegetable>();
 			asd.add(x);
 			return asd;
