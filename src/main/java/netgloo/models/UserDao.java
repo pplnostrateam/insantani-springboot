@@ -82,7 +82,7 @@ public class UserDao {
     return (User) entityManager.createQuery(
         "from User where email = :email and password = :password")
         .setParameter("email", email)
-        .setParameter("password",password)
+        .setParameter("password", password)
         .getSingleResult();
   }
 

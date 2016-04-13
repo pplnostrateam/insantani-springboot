@@ -25,15 +25,15 @@ public class UserController {
    */
   @RequestMapping(value="api/user/create")
   @ResponseBody
-  public String create(String email, String name, String password) {
+  public User create(String email, String name, String password) throws Exception {
+    User user = new User(email, name, password);
     try {
-      User user = new User(email, name, password);
       userDao.create(user);
     }
     catch (Exception ex) {
-      return "Error creating the user: " + ex.toString();
+
     }
-    return "User succesfully created!";
+    return user;
   }
   
   /**
@@ -41,15 +41,15 @@ public class UserController {
    */
   @RequestMapping(value="api/user/delete")
   @ResponseBody
-  public String delete(long id) {
+  public User delete(long id) throws Exception {
+    User user = new User(id);
     try {
-      User user = new User(id);
       userDao.delete(user);
     }
     catch (Exception ex) {
-      return "Error deleting the user: " + ex.toString();
+      throw new Exception(ex.getMessage());
     }
-    return "User succesfully deleted!";
+    return user;
   }
   
   /**
@@ -57,16 +57,19 @@ public class UserController {
    */
   @RequestMapping(value="api/user/find")
   @ResponseBody
-  public String getByEmail(String email) {
-    String userId;
+  public User getByEmail(String email) throws Exception {
+    // String userId;
+    User user = null;
     try {
-      User user = userDao.getByEmail(email);
-      userId = String.valueOf(user.getId());
+      user = userDao.getByEmail(email);
+      // userId = String.valueOf(user.getId());
     }
     catch (Exception ex) {
-      return "User not found: " + ex.toString();
+      // return "User not found: " + ex.toString();
+      throw new Exception(ex.getMessage());
     }
-    return "The user id is: " + userId;
+    // return "The user id is: " + userId;
+    return user;
   }
 
   /**
@@ -74,43 +77,35 @@ public class UserController {
    */
   @RequestMapping(value="api/user/update")
   @ResponseBody
-  public String updateName(long id, String email, String name) {
+  public User updateName(long id, String email, String name) throws Exception {
+    User user;
+
+    user = userDao.getById(id);
+    user.setEmail(email);
+    user.setName(name);
+
     try {
-      User user = userDao.getById(id);
-      user.setEmail(email);
-      user.setName(name);
       userDao.update(user);
     }
     catch (Exception ex) {
-      return "Error updating the user: " + ex.toString();
+      throw new Exception(ex.getMessage());
+      // return "Error updating the user: " + ex.toString();
     }
-    return "User succesfully updated!";
+
+    return user;
   } 
 
-  @RequestMapping(value="api/user/signin")
+  @RequestMapping(value="api/user/login")
   @ResponseBody
-  public User signin(String email, String password) {
-    User user;
+  public User login(String email, String password) throws Exception {
+    User user = null;
     try {
       user = userDao.getByEmailAndPassword(email,password);
     }
     catch(Exception ex) {
-      user = null;
+      throw new Exception(ex.getMessage());
     }
     return user;
-  }
-
-
-  @RequestMapping(value="api/user/login")
-  @ResponseBody
-  public User login(String email, String password) {
-    try {
-      User user = userDao.getByEmailAndPassword(email,password);
-      return user;
-    }
-    catch(Exception ex) {
-      return null;
-    }
   }
 
   // ------------------------
