@@ -87,6 +87,20 @@ public class UserController {
     return "User succesfully updated!";
   } 
 
+  @RequestMapping(value="api/user/signin")
+  @ResponseBody
+  public User signin(String email, String password) {
+    User user;
+    try {
+      user = userDao.getByEmailAndPassword(email,password);
+    }
+    catch(Exception ex) {
+      user = null;
+    }
+    return user;
+  }
+
+
   @RequestMapping(value="api/user/login")
   @ResponseBody
   public User login(String email, String password) {
