@@ -3,6 +3,7 @@ package netgloo.controllers;
 import netgloo.models.User;
 import netgloo.models.UserDao;
 
+import netgloo.models.Vegetable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,7 +68,7 @@ public class UserController {
     }
     return "The user id is: " + userId;
   }
-  
+
   /**
    * Update the email and the name for the user indentified by the passed id.
    */
@@ -96,7 +97,21 @@ public class UserController {
     catch(Exception ex) {
       return false;
     }
-  } 
+  }
+
+
+  @RequestMapping(value="api/user/login")
+  @ResponseBody
+  public User login(String email, String password) {
+    try {
+      User user = userDao.getByEmailAndPassword(email,password);
+      return user;
+    }
+    catch(Exception ex) {
+      return null;
+    }
+  }
+
   // ------------------------
   // PRIVATE FIELDS
   // ------------------------
