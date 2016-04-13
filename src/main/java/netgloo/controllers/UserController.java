@@ -88,15 +88,17 @@ public class UserController {
 
   @RequestMapping(value="api/user/signin")
   @ResponseBody
-  public boolean signin(String email, String password) {
+  public User signin(String email, String password) {
+    User user;
     try {
-      User user = userDao.getByEmailAndPassword(email,password);
-      return true;
+      user = userDao.getByEmailAndPassword(email,password);
     }
     catch(Exception ex) {
-      return false;
+      user = null;
     }
-  } 
+    return user;
+  }
+
   // ------------------------
   // PRIVATE FIELDS
   // ------------------------
