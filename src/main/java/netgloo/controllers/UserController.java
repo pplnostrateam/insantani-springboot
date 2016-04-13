@@ -86,6 +86,17 @@ public class UserController {
     return "User succesfully updated!";
   } 
 
+  @RequestMapping(value="api/user/signin")
+  @ResponseBody
+  public boolean signin(String email, String password) {
+    try {
+      User user = userDao.getByEmailAndPassword(email,password);
+      return true;
+    }
+    catch(Exception ex) {
+      return false;
+    }
+  } 
   // ------------------------
   // PRIVATE FIELDS
   // ------------------------

@@ -78,6 +78,14 @@ public class UserDao {
     return;
   }
 
+  public User getByEmailAndPassword(String email, String password) {
+    return (User) entityManager.createQuery(
+        "from User where email = :email and password = :password")
+        .setParameter("email", email)
+        .setParameter("password",password)
+        .getSingleResult();
+  }
+
   // ------------------------
   // PRIVATE FIELDS
   // ------------------------
