@@ -1,4 +1,4 @@
-x`package netgloo.controllers;
+package netgloo.controllers;
 
 import netgloo.models.User;
 import netgloo.models.UserDao;
