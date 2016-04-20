@@ -14,10 +14,10 @@ public class MainController {
   }
 
 
-  @RequestMapping("/error")
+ /* @RequestMapping("/error")
   @ResponseBody
   public String error() {
     return "NOT FOUND";
-  }
+  }*/
 
 }

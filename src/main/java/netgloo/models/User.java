@@ -31,6 +31,7 @@ public class User {
   @NotNull
   private String password;
 
+  //private Set<Order> orders;
   // ------------------------
   // PUBLIC METHODS
   // ------------------------
@@ -79,4 +80,13 @@ public class User {
     this.password = password;
   }
 
+
+  // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  // public Set<Order> getOrders() {
+  //     return orders;
+  // } 
+
+  // public void setOrders(Set<Order> value) {
+  //   this.orders = value;
+  // }
 } // class User
