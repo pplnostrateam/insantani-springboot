@@ -12,7 +12,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 @Entity
 @Table(name = "pemesanan")
@@ -33,10 +33,10 @@ public class Order {
   	@NotNull
     private Date created;
   	
-  	@OneToOne
+  	@ManyToOne
   	private User user;
 
-    @OneToOne
+    @ManyToOne
     private Vegetable vegetable;
 
     @NotNull
