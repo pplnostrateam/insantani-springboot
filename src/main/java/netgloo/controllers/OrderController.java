@@ -4,6 +4,7 @@ import netgloo.models.*;
 import netgloo.controllers.*;
 
 import java.util.Map;
+import org.json.simple.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,9 @@ public class OrderController {
 
   @RequestMapping(value = "api/order/start", method = RequestMethod.POST)
   @ResponseBody
-  public String createOrder(@RequestBody Map<String, String> payload) {
+  public JSONObject createOrder(@RequestBody Map<String, String> payload) {
+
+    JSONObject obj = new JSONObject();
     System.out.println("payload " + payload );
 
     long user = Long.parseLong(payload.get("user"));
@@ -29,6 +32,7 @@ public class OrderController {
     Order order;
     String token;
 
+
    	try{
    		User pembeli = userDao.getById(user); 
    		Vegetable sayur = vegetableDao.getById(vegetable);
@@ -37,14 +41,15 @@ public class OrderController {
       System.out.println(pembeli.getEmail());
       System.out.println(sayur.getName());
    		order = new Order(pembeli, sayur,
-     		location, latitude, longitude, note, harga, token);
+     	location, latitude, longitude, note, harga, token);
    		orderDao.create(order);//insert to database
+      obj.put("voucher",token);
    	}
    	catch (Exception ex) {
-   		return "[failed \":" + ex.toString() + "]";
+   		obj.put("failed",ex.toString());
     }
 
-    return "[\"voucher\":\""+ token+"\"]";
+    return obj;
   }
 
   @Autowired
