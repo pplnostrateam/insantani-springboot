@@ -52,6 +52,9 @@ public class Order {
     @NotNull
     private int price;
 
+    @ManyToOne
+    private Farmer farmer;
+
     public Order() { //jpa only
 
     }
@@ -70,6 +73,7 @@ public class Order {
         this.price = price;
         this.created = new Date();
     }
+
 
 	@PrePersist
  	protected void onCreate() {
@@ -119,4 +123,13 @@ public class Order {
     public int getPrice() {
         return price;
     }
+
+    public Farmer getFarmer() {
+        return farmer;
+    }
+
+    public void setFarmer(Farmer farmer) {
+        this.farmer = farmer;
+    }
+
 }

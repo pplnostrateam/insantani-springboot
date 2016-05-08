@@ -1,6 +1,7 @@
 package netgloo.models;
 
 import java.util.List;
+import netgloo.models.Order;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -53,7 +54,7 @@ public class OrderDao {
    */
   @SuppressWarnings("unchecked")
   public List<Order> getAll() {
-    return entityManager.createQuery("from order").getResultList();
+    return entityManager.createQuery("from Order").getResultList();
   }
   
   /**
@@ -61,7 +62,7 @@ public class OrderDao {
    */
   public Order getByToken(String name) {
     return (Order) entityManager.createQuery(
-        "from order where token like :name")
+        "from Order where token like :name")
         .setParameter("name", name)
         .getSingleResult();
   }
@@ -69,7 +70,7 @@ public class OrderDao {
   /**
    * Return the user having the passed id.
    */
-  public Order getById(int id) {
+  public Order getById(long id) {
     return entityManager.find(Order.class, id);
   }
 
@@ -80,6 +81,25 @@ public class OrderDao {
     entityManager.merge(user);
     return;
   }
+
+  /*
+  * Set farmer for the order
+  */
+  public void updateFarmer(Farmer farmer, long id) {
+    Order order = entityManager.find(Order.class, id);
+    order.setFarmer(farmer);
+    entityManager.merge(order);
+    return;
+  }
+
+  public List<Order>  getHistoryByUserID(String id) {
+    long id2 = Long.parseLong(id);
+   return (List<Order>) entityManager.createQuery("from Order t where t.user.id = :userid")
+   .setParameter("userid",id2)
+   .getResultList();
+  }
+  // 
+
 
   // ------------------------
   // PRIVATE FIELDS
