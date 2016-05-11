@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class OrderController {
 
-  @RequestMapping(value = "api/order/start", method = RequestMethod.POST)
+  @RequestMapping(value = "api/order/", method = RequestMethod.POST)
   @ResponseBody
   public JSONObject createOrder(@RequestBody Map<String, String> payload) {
 
@@ -44,7 +44,7 @@ public class OrderController {
       System.out.println(sayur.getName());
    		order = new Order(pembeli, sayur,
      	location, latitude, longitude, note, harga, token);
-      findFarmer(order); //set farmer for order
+    //  findFarmer(order); //set farmer for order
    		orderDao.create(order);//insert to database
       obj.put("voucher",token);
    	}
@@ -63,6 +63,11 @@ public class OrderController {
     JSONObject obj = new JSONObject();
     try {
       Order order = orderDao.getByToken(voucher);
+      if(order.getFarmer() != null) {
+        Farmer farmer = orderDao.findFarmer(order);
+        order.setFarmer(farmer);
+        orderDao.update(order);
+      }
       obj.put("farmerContact", order.getFarmer().getPhoneNumber());
       obj.put("kodePemesanan", voucher);
       obj.put("farmerName", order.getFarmer().getName());
@@ -77,12 +82,14 @@ public class OrderController {
     return obj;
   }
 
-  @RequestMapping(value = "api/order/status", method = RequestMethod.GET)
+  @RequestMapping(value = "api/order/status", method = RequestMethod.POST)
   @ResponseBody
   public JSONObject status(String voucher) {
     JSONObject obj = new JSONObject();
     try {
       Order order = orderDao.getByToken(voucher);
+      order.setOrderStatus(4);
+      orderDao.update(order);
       obj.put("status", ""+order.getOrderStatus());
     }
     catch(Exception e) {
@@ -94,7 +101,7 @@ public class OrderController {
 /*
  * Finding the list of order history of user
  */
-  @RequestMapping(value="api/order/findhistory", method = RequestMethod.GET)
+  @RequestMapping(value="api/order/", method = RequestMethod.GET)
   @ResponseBody
   public List<JSONObject> findhistory(String userid) {
     List<Order> result;

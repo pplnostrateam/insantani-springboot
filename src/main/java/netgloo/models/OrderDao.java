@@ -2,6 +2,7 @@ package netgloo.models;
 
 import java.util.List;
 import netgloo.models.Order;
+import netgloo.models.Farmer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -98,8 +99,34 @@ public class OrderDao {
    .setParameter("userid",id2)
    .getResultList();
   }
+
+  public Farmer findFarmer(Order order) {
+    double dist = 10;
+    double orig_lat = order.getLatitude();
+    double orig_lon = order.getLongitude();
+    Farmer farmer = (Farmer)entityManager.createNativeQuery("select (3956*2*ASIN(SQRT(POWER(SIN((?1-abs(u.latitude))*pi()/180/2),2)+COS(?1*pi()/180) * COS(abs(u.latitude)* pi()/180) *POWER(SIN((?2 -u.longitude)* pi()/180/2),2)))) as distance from Farmers u having distance < :dist ORDER BY distance")
+      .setParameter(1, orig_lat)
+      .setParameter(2, orig_lon)
+      .setParameter("dist", 10)
+      .getSingleResult();
+    return farmer;
+  }
+
   // 
 
+/* FINDING DISTANCE FARMER
+set @orig_lat = 37.334542;
+set @orig_lon = -121.890821;
+set @dist = 10;
+
+
+
+UserGpsLocation users = (UserGpsLocation)em.createNativeQuery("select (3956*2*ASIN(SQRT(POWER(SIN((?1-abs(u.mlatitude))*pi()/180/2),2)+COS(?1*pi()/180) * COS(abs(u.mlatitude)* pi()/180) *POWER(SIN((?2 -u.mlogitude)* pi()/180/2),2)))) as distance from UserGpsLocation u having distance < :dist ORDER BY distance")
+      .setParameter(1, mlatitude)
+      .setParameter(2, mlogitude)
+      .setParameter("dist", 10)
+      .getResultList();
+*/
 
   // ------------------------
   // PRIVATE FIELDS

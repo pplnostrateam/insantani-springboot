@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * Represents an User for this web application.
  */
 @Entity
-@Table(name = "vegetable")
+@Table(name = "vegetables")
 public class Vegetable {
 
   // ------------------------

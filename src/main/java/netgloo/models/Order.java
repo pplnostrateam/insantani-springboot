@@ -15,7 +15,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.ManyToOne;
 
 @Entity
-@Table(name = "pemesanan")
+@Table(name = "orders")
 public class Order {
 
     final static int CREATED = 1;
@@ -28,7 +28,7 @@ public class Order {
     private long id;
 
     @NotNull
-    private String token;
+    private String orderNumber;
 
   	@NotNull
     private Date created;
@@ -51,6 +51,8 @@ public class Order {
     private String note;
     @NotNull
     private int price;
+    @NotNull
+    private int quantity;
 
     @ManyToOne
     private Farmer farmer;
@@ -62,7 +64,7 @@ public class Order {
     public Order(User user, Vegetable vegetable,
      String location, double latitude, double longitude, String note, int price, String token) {
 
-        this.token = token;
+        this.orderNumber = token;
         this.orderStatus = CREATED;
         this.user = user;
         this.vegetable = vegetable;
@@ -89,7 +91,7 @@ public class Order {
     }
 
     public String getToken() {
-        return token;
+        return orderNumber;
     }
 
     public User getId() {
@@ -132,4 +134,7 @@ public class Order {
         this.farmer = farmer;
     }
 
+    public void setOrderStatus(int orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }
