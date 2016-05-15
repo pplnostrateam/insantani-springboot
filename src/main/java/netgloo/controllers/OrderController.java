@@ -14,11 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 public class OrderController {
 
-  @RequestMapping(value = "api/order/", method = RequestMethod.POST)
+  @RequestMapping(value = "api/order/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public JSONObject createOrder(@RequestBody Map<String, String> payload) {
 
@@ -39,17 +43,18 @@ public class OrderController {
    		User pembeli = userDao.getById(user); 
    		Vegetable sayur = vegetableDao.getById(vegetable);
    		int harga = sayur.getPrice();
+      int quantity = sayur.getStock();
       token = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(0,5);
       System.out.println(pembeli.getEmail());
       System.out.println(sayur.getName());
    		order = new Order(pembeli, sayur,
-     	location, latitude, longitude, note, harga, token);
+     	location, latitude, longitude, note, harga, token, quantity);
     //  findFarmer(order); //set farmer for order
    		orderDao.create(order);//insert to database
-      obj.put("voucher",token);
+      obj.put("ordernumber",token);
    	}
    	catch (Exception ex) {
-   		obj.put("failed",ex.toString());
+   		obj.put("ordernumber","Sorry failed to create order");
     }
     return obj;
   }
@@ -59,41 +64,40 @@ public class OrderController {
  */
   @RequestMapping(value = "api/order/detail", method = RequestMethod.GET)
   @ResponseBody
-  public JSONObject detail(String voucher) {
-    JSONObject obj = new JSONObject();
+  public Order detail(String ordernumber) {
+    System.out.println(ordernumber);
+    Order order;
     try {
-      Order order = orderDao.getByToken(voucher);
-      if(order.getFarmer() != null) {
+      order = orderDao.getByToken(ordernumber);
+      if(order.getFarmer() == null) {
+        System.out.println("Order dont have farmers failed");
         Farmer farmer = orderDao.findFarmer(order);
         order.setFarmer(farmer);
         orderDao.update(order);
       }
-      obj.put("farmerContact", order.getFarmer().getPhoneNumber());
-      obj.put("kodePemesanan", voucher);
-      obj.put("farmerName", order.getFarmer().getName());
-      obj.put("status", ""+order.getOrderStatus());
+      return order;
     }
     catch(Exception e) {
-      obj.put("farmerContact", "Null");
-      obj.put("kodePemesanan", "Null");
-      obj.put("farmerName", "Null");
-      obj.put("status", "order not found");
+      order = new Order("Order not found");
     }
-    return obj;
+    return order;
   }
 
-  @RequestMapping(value = "api/order/status", method = RequestMethod.POST)
+  @RequestMapping(value = "api/order/status", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public JSONObject status(String voucher) {
+  public JSONObject status(String ordernumber) {
     JSONObject obj = new JSONObject();
     try {
-      Order order = orderDao.getByToken(voucher);
+      Order order = orderDao.getByToken(ordernumber);
       order.setOrderStatus(4);
       orderDao.update(order);
-      obj.put("status", ""+order.getOrderStatus());
+      Vegetable vegetable = order.getVegetable();
+      vegetable.setStock(vegetable.getStock() - order.getQuantity());
+      vegetableDao.update(vegetable);
+      obj.put("orderstatus", ""+order.getOrderStatus());
     }
     catch(Exception e) {
-      obj.put("status", "order not found");
+      obj.put("orderstatus", "order not found");
     }
     return obj;
   }
@@ -101,29 +105,17 @@ public class OrderController {
 /*
  * Finding the list of order history of user
  */
-  @RequestMapping(value="api/order/", method = RequestMethod.GET)
+  @RequestMapping(value="api/order/", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public List<JSONObject> findhistory(String userid) {
+  public List<Order> findhistory(String userid) {
     List<Order> result;
-    List<JSONObject> parentData = new ArrayList<JSONObject>();
     try{
       result = orderDao.getHistoryByUserID(userid);
     } catch (Exception ex) {
       System.out.println("error " +  ex.toString());
       result = new ArrayList<Order>();
     }
-    
-    for(Order x : result) {
-      JSONObject current = new JSONObject();
-      current.put("location", x.getLocation());
-      current.put("vegetable", x.getVegetable().getName());
-      current.put("user", x.getUser().getName());
-      current.put("note", x.getNote());
-      current.put("price", x.getPrice());
-      parentData.add(current);
-    }
-
-    return parentData;
+    return result;
   }
   /*
   * Finding available farmer for this order

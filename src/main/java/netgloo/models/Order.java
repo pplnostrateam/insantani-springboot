@@ -61,8 +61,12 @@ public class Order {
 
     }
 
+    public Order(String note) {
+        this.note = note;
+    }
+
     public Order(User user, Vegetable vegetable,
-     String location, double latitude, double longitude, String note, int price, String token) {
+     String location, double latitude, double longitude, String note, int price, String token, int quantity) {
 
         this.orderNumber = token;
         this.orderStatus = CREATED;
@@ -124,6 +128,10 @@ public class Order {
 
     public int getPrice() {
         return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     public Farmer getFarmer() {

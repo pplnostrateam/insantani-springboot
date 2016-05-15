@@ -9,6 +9,10 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
 
 /**
  * This class is used to access data for the User entity.
@@ -63,7 +67,7 @@ public class OrderDao {
    */
   public Order getByToken(String name) {
     return (Order) entityManager.createQuery(
-        "from Order where token like :name")
+        "from Order where orderNumber like :name")
         .setParameter("name", name)
         .getSingleResult();
   }
@@ -101,20 +105,29 @@ public class OrderDao {
   }
 
   public Farmer findFarmer(Order order) {
-    double dist = 10;
+    Farmer farmer = null;
+    double dist = 10000;
     double orig_lat = order.getLatitude();
     double orig_lon = order.getLongitude();
-    Farmer farmer = (Farmer)entityManager.createNativeQuery("select (3956*2*ASIN(SQRT(POWER(SIN((?1-abs(u.latitude))*pi()/180/2),2)+COS(?1*pi()/180) * COS(abs(u.latitude)* pi()/180) *POWER(SIN((?2 -u.longitude)* pi()/180/2),2)))) as distance from Farmers u having distance < :dist ORDER BY distance")
-      .setParameter(1, orig_lat)
-      .setParameter(2, orig_lon)
-      .setParameter("dist", 10)
+    try{
+      farmer = (Farmer)entityManager.createQuery("from Farmer u where (3956*2*ASIN(SQRT(POWER(SIN((:lat-abs(u.latitude))*pi()/180/2),2)+COS(:lat*pi()/180) * COS(abs(u.latitude)* pi()/180) *POWER(SIN((:long -u.longitude)* pi()/180/2),2))))  <= :dist")
+      .setParameter("lat", orig_lat)
+      .setParameter("long", orig_lon)
+      .setParameter("dist", dist)
       .getSingleResult();
+    } catch(Exception ex) {
+      System.out.println("ada error di SQL");
+      System.out.println(orig_lat);
+      System.out.println(orig_lon);
+      System.out.println(ex.toString());
+    }
+
     return farmer;
   }
 
   // 
 
-/* FINDING DISTANCE FARMER
+/* FINDING DISTANCE FARMER haversine
 set @orig_lat = 37.334542;
 set @orig_lon = -121.890821;
 set @dist = 10;
