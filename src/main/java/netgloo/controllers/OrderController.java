@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class OrderController {
 
-  @RequestMapping(value = "api/order/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "api/order", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public JSONObject createOrder(@RequestBody Map<String, String> payload) {
 
@@ -105,9 +105,10 @@ public class OrderController {
 /*
  * Finding the list of order history of user
  */
-  @RequestMapping(value="api/order/", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @RequestMapping(value = "api/order", method = RequestMethod.GET)
   @ResponseBody
   public List<Order> findhistory(String userid) {
+    System.out.println("find order list :" + userid);
     List<Order> result;
     try{
       result = orderDao.getHistoryByUserID(userid);
