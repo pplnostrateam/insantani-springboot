@@ -69,8 +69,7 @@ public class OrderController {
  */
   @RequestMapping(value = "api/order/detail", method = RequestMethod.GET)
   @ResponseBody
-  public Order detail(@RequestHeader Map<String, String> payload) {
-    String ordernumber = payload.get("ordernumber");
+  public Order detail(String ordernumber) {
     System.out.println(ordernumber);
     Order order;
     try {
