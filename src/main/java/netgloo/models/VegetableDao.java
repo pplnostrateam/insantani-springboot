@@ -70,6 +70,10 @@ public class VegetableDao {
     return entityManager.find(Vegetable.class, id);
   }
 
+    public Vegetable getById(long id) {
+    return entityManager.find(Vegetable.class, id);
+  }
+
   /**
    * Update the passed user in the database.
    */

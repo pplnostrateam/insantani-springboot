@@ -46,7 +46,7 @@ public class Vegetable {
     this.stock = stock;
   }
 
-   public long getId() {
+   public int getId() {
     return id;
   }
 

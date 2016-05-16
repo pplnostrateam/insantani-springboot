@@ -34,6 +34,7 @@ public class OrderController {
     String location = payload.get("location");
     double latitude = Double.parseDouble(payload.get("latitude"));
     double longitude = Double.parseDouble(payload.get("longitude"));
+    int quantity = Integer.parseInt(payload.get("quantity"));
     String note = payload.get("note");
     Order order;
     String token;
@@ -42,8 +43,11 @@ public class OrderController {
    	try{
    		User pembeli = userDao.getById(user); 
    		Vegetable sayur = vegetableDao.getById(vegetable);
+      if(sayur.getStock() < quantity) {
+        obj.put("ordernumber","Stock not ready, order not made");
+        return obj;
+      }
    		int harga = sayur.getPrice();
-      int quantity = sayur.getStock();
       token = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(0,5);
       System.out.println(pembeli.getEmail());
       System.out.println(sayur.getName());
@@ -85,19 +89,28 @@ public class OrderController {
 
   @RequestMapping(value = "api/order/status", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public JSONObject status(String ordernumber) {
+  public JSONObject status(@RequestBody Map<String, String> payload) {
+    String ordernumber = payload.get("ordernumber");
     JSONObject obj = new JSONObject();
     try {
       Order order = orderDao.getByToken(ordernumber);
+      if(order == null) {
+        System.out.println("bug");
+      }
       order.setOrderStatus(4);
       orderDao.update(order);
       Vegetable vegetable = order.getVegetable();
+      System.out.println("vegetable stock " + vegetable.getStock());
+      System.out.println("order quantity " + order.getQuantity());
       vegetable.setStock(vegetable.getStock() - order.getQuantity());
       vegetableDao.update(vegetable);
+      Vegetable vegetable2 = vegetableDao.getById(vegetable.getId());
+      System.out.println("new vegetable stock " + vegetable.getStock());
+
       obj.put("orderstatus", ""+order.getOrderStatus());
     }
     catch(Exception e) {
-      obj.put("orderstatus", "order not found");
+      obj.put("orderstatus", "order " + ordernumber + " not found");
     }
     return obj;
   }
