@@ -121,8 +121,8 @@ public class OrderController {
  */
   @RequestMapping(value = "api/order", method = RequestMethod.GET)
   @ResponseBody
-  public List<Order> findhistory(@RequestHeader Map<String, String> payload) {
-    String userid = payload.get("userid");
+  public List<Order> findhistory(String userid) {
+    //String userid = payload.get("userid");
     System.out.println("find order list :" + userid);
     List<Order> result;
     try{
