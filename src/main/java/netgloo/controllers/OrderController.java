@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -68,7 +69,8 @@ public class OrderController {
  */
   @RequestMapping(value = "api/order/detail", method = RequestMethod.GET)
   @ResponseBody
-  public Order detail(String ordernumber) {
+  public Order detail(@RequestHeader Map<String, String> payload) {
+    String ordernumber = payload.get("ordernumber");
     System.out.println(ordernumber);
     Order order;
     try {
@@ -120,7 +122,8 @@ public class OrderController {
  */
   @RequestMapping(value = "api/order", method = RequestMethod.GET)
   @ResponseBody
-  public List<Order> findhistory(String userid) {
+  public List<Order> findhistory(@RequestHeader Map<String, String> payload) {
+    String userid = payload.get("userid");
     System.out.println("find order list :" + userid);
     List<Order> result;
     try{

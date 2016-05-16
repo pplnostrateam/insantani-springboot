@@ -99,9 +99,12 @@ public class OrderDao {
 
   public List<Order>  getHistoryByUserID(String id) {
     long id2 = Long.parseLong(id);
-   return (List<Order>) entityManager.createQuery("from Order t where t.user.id = :userid")
+    System.out.println("idnya " + id2);
+   List<Order> order = (List<Order>) entityManager.createQuery("from Order t where t.user.id = :userid")
    .setParameter("userid",id2)
    .getResultList();
+   System.out.println("orde size = " + order);
+   return order;
   }
 
   public Farmer findFarmer(Order order) {
