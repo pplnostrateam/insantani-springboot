@@ -145,4 +145,12 @@ public class Order {
     public void setOrderStatus(int orderStatus) {
         this.orderStatus = orderStatus;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 }

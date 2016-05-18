@@ -8,10 +8,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Repository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -28,7 +32,10 @@ import org.springframework.web.bind.annotation.*;
 @Repository
 @Transactional
 public class OrderDao {
-	 // ------------------------
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    // ------------------------
   // PUBLIC METHODS
   // ------------------------
   
@@ -59,17 +66,29 @@ public class OrderDao {
    */
   @SuppressWarnings("unchecked")
   public List<Order> getAll() {
-    return entityManager.createQuery("from Order").getResultList();
+
+      logger.info("> findAll");
+      List<Order> x = entityManager.createQuery("from Order").getResultList();
+      logger.info("< findAll");
+      return x;
   }
   
   /**
    * Return the user having the passed email.
    */
   public Order getByToken(String name) {
-    return (Order) entityManager.createQuery(
+
+
+      logger.info("< findOne id:{}", name);
+    Order x =  (Order) entityManager.createQuery(
         "from Order where orderNumber like :name")
         .setParameter("name", name)
         .getSingleResult();
+
+
+      logger.info("> findOne id:{}", name);
+
+      return x;
   }
 
   /**
@@ -99,11 +118,11 @@ public class OrderDao {
 
   public List<Order>  getHistoryByUserID(String id) {
     long id2 = Long.parseLong(id);
-    System.out.println("idnya " + id2);
+      logger.info("< getHistoryByUserID id:{}", id);
    List<Order> order = (List<Order>) entityManager.createQuery("from Order t where t.user.id = :userid")
    .setParameter("userid",id2)
    .getResultList();
-   System.out.println("orde size = " + order);
+      logger.info("> getHistoryByUserID id:{}", id);
    return order;
   }
 
