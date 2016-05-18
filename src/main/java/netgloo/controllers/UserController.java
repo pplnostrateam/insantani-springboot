@@ -1,28 +1,58 @@
 package netgloo.controllers;
 
+import netgloo.exception.UserAlreadyExistsException;
 import netgloo.models.User;
 import netgloo.models.UserDao;
 
 import netgloo.models.Vegetable;
+import netgloo.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.inject.Inject;
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Class UserController
  */
-@Controller
+
+//@Controller
+@RestController
 public class UserController {
 
-  // ------------------------
-  // PUBLIC METHODS
-  // ------------------------
 
-  /**
-   * Create a new user with an auto-generated id and email and name as passed 
-   * values.
-   */
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+  private final UserService userService;
+
+  @Inject
+  public UserController(final UserService userService) {
+    this.userService = userService;
+  }
+
+  @RequestMapping(value = "/user", method = RequestMethod.POST)
+  public User createUser(@RequestBody @Valid final User user) {
+    LOGGER.debug("Received request to create the {}", user);
+    return userService.save(user);
+  }
+
+  @RequestMapping(value = "/user", method = RequestMethod.GET)
+  public List<User> listUsers() {
+    LOGGER.debug("Received request to list all users");
+    return userService.getList();
+  }
+
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.CONFLICT)
+  public String handleUserAlreadyExistsException(UserAlreadyExistsException e) {
+    return e.getMessage();
+  }
+
+  /*
   @RequestMapping(value="api/user/create")
   @ResponseBody
   public User create(String email, String name, String password) throws Exception {
@@ -35,10 +65,9 @@ public class UserController {
     }
     return user;
   }
-  
-  /**
-   * Delete the user with the passed id.
-   */
+  */
+
+  /*
   @RequestMapping(value="api/user/delete")
   @ResponseBody
   public User delete(long id) throws Exception {
@@ -51,10 +80,10 @@ public class UserController {
     }
     return user;
   }
+  */
   
-  /**
-   * Retrieve the id for the user with the passed email address.
-   */
+
+  /*
   @RequestMapping(value="api/user/find")
   @ResponseBody
   public User getByEmail(String email) throws Exception {
@@ -71,10 +100,9 @@ public class UserController {
     // return "The user id is: " + userId;
     return user;
   }
+  */
 
-  /**
-   * Update the email and the name for the user indentified by the passed id.
-   */
+ /*
   @RequestMapping(value="api/user/update")
   @ResponseBody
   public User updateName(long id, String email, String name) throws Exception {
@@ -93,8 +121,10 @@ public class UserController {
     }
 
     return user;
-  } 
+  }
+  */
 
+  /*
   @RequestMapping(value="api/user/login")
   @ResponseBody
   public User login(String email, String password) throws Exception {
@@ -107,13 +137,11 @@ public class UserController {
     }
     return user;
   }
-
-  // ------------------------
-  // PRIVATE FIELDS
-  // ------------------------
   
   // Wire the UserDao used inside this controller.
   @Autowired
   private UserDao userDao;
+  */
+
   
 } // class UserController
