@@ -5,28 +5,19 @@ import netgloo.models.UserDao;
 
 import netgloo.models.Vegetable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Class UserController
  */
-@Controller
+@RestController
 public class UserController {
 
-  // ------------------------
-  // PUBLIC METHODS
-  // ------------------------
-
-  /**
-   * Create a new user with an auto-generated id and email and name as passed 
-   * values.
-   */
-  @RequestMapping(value="api/user/create")
-  @ResponseBody
-  public User create(String email, String name, String password) throws Exception {
-    User user = new User(email, name, password);
+  @RequestMapping(value="api/user/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  User create(@RequestBody User input) throws Exception {
+    User user = new User(input.getEmail(), input.getName(), input.getPassword(), input.getPhone());
     try {
       userDao.create(user);
     }
@@ -35,82 +26,36 @@ public class UserController {
     }
     return user;
   }
-  
-  /**
-   * Delete the user with the passed id.
-   */
-  @RequestMapping(value="api/user/delete")
-  @ResponseBody
-  public User delete(long id) throws Exception {
-    User user = new User(id);
-    try {
-      userDao.delete(user);
-    }
-    catch (Exception ex) {
-      throw new Exception(ex.getMessage());
-    }
-    return user;
-  }
-  
-  /**
-   * Retrieve the id for the user with the passed email address.
-   */
-  @RequestMapping(value="api/user/find")
+
+  @RequestMapping(value="api/user/find/{email}", method = RequestMethod.GET)
   @ResponseBody
   public User getByEmail(String email) throws Exception {
-    // String userId;
     User user = null;
     try {
       user = userDao.getByEmail(email);
-      // userId = String.valueOf(user.getId());
     }
     catch (Exception ex) {
-      // return "User not found: " + ex.toString();
-      throw new Exception(ex.getMessage());
-    }
-    // return "The user id is: " + userId;
-    return user;
-  }
-
-  /**
-   * Update the email and the name for the user indentified by the passed id.
-   */
-  @RequestMapping(value="api/user/update")
-  @ResponseBody
-  public User updateName(long id, String email, String name) throws Exception {
-    User user;
-
-    user = userDao.getById(id);
-    user.setEmail(email);
-    user.setName(name);
-
-    try {
-      userDao.update(user);
-    }
-    catch (Exception ex) {
-      throw new Exception(ex.getMessage());
-      // return "Error updating the user: " + ex.toString();
-    }
-
-    return user;
-  } 
-
-  @RequestMapping(value="api/user/login")
-  @ResponseBody
-  public User login(String email, String password) throws Exception {
-    User user = null;
-    try {
-      user = userDao.getByEmailAndPassword(email,password);
-    }
-    catch(Exception ex) {
       throw new Exception(ex.getMessage());
     }
     return user;
   }
 
-  // ------------------------
-  // PRIVATE FIELDS
-  // ------------------------
+    @RequestMapping(value="api/user/login", method = RequestMethod.POST,  consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public User login(@RequestBody User input) throws Exception {
+        User user = null;
+
+        System.out.println(input.getEmail());
+        System.out.println(input.getName());
+
+        try {
+            user = userDao.getByEmailAndPassword(input.getEmail(), input.getPassword());
+
+        } catch(Exception ex) {
+            throw new Exception(ex.getMessage());
+        }
+
+    return user;
+  }
   
   // Wire the UserDao used inside this controller.
   @Autowired

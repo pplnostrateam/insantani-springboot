@@ -13,11 +13,4 @@ public class MainController {
     return "Spring boot mysql JPA Hibernate, read http://docs.insantaninostra.apiary.io for API docummentation";
   }
 
-
- /* @RequestMapping("/error")
-  @ResponseBody
-  public String error() {
-    return "NOT FOUND";
-  }*/
-
 }
