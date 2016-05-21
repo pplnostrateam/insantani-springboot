@@ -61,7 +61,6 @@ public class UserController {
       userDao.create(user);
     }
     catch (Exception ex) {
-
     }
     return user;
   }

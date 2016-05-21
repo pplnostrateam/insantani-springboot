@@ -50,7 +50,7 @@ public class OrderController {
       }
    		int harga = sayur.getPrice() * quantity;
       token = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(0,5);
-      System.out.println(pembeli.getEmail());
+      //System.out.println(pembeli.getEmail());
       System.out.println(sayur.getName());
    		order = new Order(pembeli, sayur,
      	location, latitude, longitude, note, harga, token, quantity);
