@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Class UserController
  */
 @Controller
+@RequestMapping(value = "api/user")
 public class UserController {
 
   // ------------------------
@@ -26,7 +27,7 @@ public class UserController {
    * Create a new user with an auto-generated id and email and name as passed 
    * values.
    */
-  @RequestMapping(value="api/user/create", method = RequestMethod.POST,
+  @RequestMapping(value="", method = RequestMethod.POST,
           consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public User create(@RequestBody User input) throws Exception {
@@ -58,7 +59,7 @@ public class UserController {
   /**
    * Retrieve the id for the user with the passed email address.
    */
-  @RequestMapping(value="api/user/find", method = RequestMethod.GET)
+  @RequestMapping(value="/find", method = RequestMethod.GET)
   @ResponseBody
   public User getByEmail(String email) throws Exception {
     // String userId;
@@ -98,7 +99,7 @@ public class UserController {
     return user;
   } 
 
-  @RequestMapping(value="api/user/login", method = RequestMethod.POST,
+  @RequestMapping(value="/login", method = RequestMethod.POST,
           consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public User login(@RequestBody User input) throws Exception {
