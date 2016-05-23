@@ -31,10 +31,8 @@ public class User {
   @NotNull
   private String password;
 
-  //private Set<Order> orders;
-  // ------------------------
-  // PUBLIC METHODS
-  // ------------------------
+    @NotNull
+    private String phone;
   
   public User() { }
 
@@ -42,10 +40,11 @@ public class User {
     this.id = id;
   }
 
-  public User(String email, String name, String password) {
+  public User(String email, String name, String password, String phone) {
     this.email = email;
     this.name = name;
     this.password = password;
+      this.phone = phone;
   }
 
   public long getId() {
@@ -80,13 +79,8 @@ public class User {
     this.password = password;
   }
 
+    public String getPhone() { return phone; }
 
-  // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  // public Set<Order> getOrders() {
-  //     return orders;
-  // } 
+    public void setPhone(String phone) { this.phone = phone; }
 
-  // public void setOrders(Set<Order> value) {
-  //   this.orders = value;
-  // }
 } // class User

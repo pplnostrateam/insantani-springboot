@@ -31,7 +31,7 @@ public class UserController {
           consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   public User create(@RequestBody User input) throws Exception {
-      User user = new User(input.getEmail(), input.getName(), input.getPassword());
+      User user = new User(input.getEmail(), input.getName(), input.getPassword(), input.getPhone());
 
       try {
           userDao.create(user);
