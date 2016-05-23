@@ -43,10 +43,11 @@ public class OrderDao {
    * Save the user in the database.
    */
   public void create(Order user) {
-    System.out.println("LETS PERSIST");
-    System.out.println(user.getToken());
+    logger.info("> create new order");
+    System.out.println(user.getOrderNumber());
     System.out.println(user.getCreated());
     entityManager.persist(user);
+    logger.info("< create new order ");
     return;
   }
   
@@ -76,7 +77,7 @@ public class OrderDao {
   /**
    * Return the user having the passed email.
    */
-  public Order getByToken(String name) {
+  public Order getByOrderNumber(String name) {
 
 
       logger.info("< findOne id:{}", name);

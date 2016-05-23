@@ -94,7 +94,7 @@ public class Order {
         return vegetable;
     }
 
-    public String getToken() {
+    public String getOrderNumber() {
         return orderNumber;
     }
 

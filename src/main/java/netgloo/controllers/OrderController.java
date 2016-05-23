@@ -56,6 +56,8 @@ public class OrderController {
      	location, latitude, longitude, note, harga, token, quantity);
     //  findFarmer(order); //set farmer for order
    		orderDao.create(order);//insert to database
+      Order inserted = orderDao.getByOrderNumber(token);
+      token = inserted.getOrderNumber();
       obj.put("ordernumber",token);
    	}
    	catch (Exception ex) {
@@ -73,7 +75,7 @@ public class OrderController {
     System.out.println(ordernumber);
     Order order;
     try {
-      order = orderDao.getByToken(ordernumber);
+      order = orderDao.getByOrderNumber(ordernumber);
       if(order.getFarmer() == null) {
         System.out.println("Order dont have farmers failed");
         Farmer farmer = orderDao.findFarmer(order);
@@ -94,7 +96,7 @@ public class OrderController {
     String ordernumber = payload.get("ordernumber");
     JSONObject obj = new JSONObject();
     try {
-      Order order = orderDao.getByToken(ordernumber);
+      Order order = orderDao.getByOrderNumber(ordernumber);
       if(order == null) {
         System.out.println("bug");
       }
