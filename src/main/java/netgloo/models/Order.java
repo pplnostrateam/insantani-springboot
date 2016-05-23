@@ -102,8 +102,8 @@ public class Order {
         return user;
     }
 
-    public Vegetable getCreated() {
-        return vegetable;
+    public Date getCreated() {
+        return created;
     }
 
     public String getLocation() {

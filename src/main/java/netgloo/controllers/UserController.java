@@ -5,14 +5,18 @@ import netgloo.models.UserDao;
 
 import netgloo.models.Vegetable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Class UserController
  */
 @Controller
+@RequestMapping(value = "api/user")
 public class UserController {
 
   // ------------------------
@@ -23,17 +27,17 @@ public class UserController {
    * Create a new user with an auto-generated id and email and name as passed 
    * values.
    */
-  @RequestMapping(value="api/user/create")
+  @RequestMapping(value="", method = RequestMethod.POST,
+          consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public User create(String email, String name, String password) throws Exception {
-    User user = new User(email, name, password);
-    try {
-      userDao.create(user);
-    }
-    catch (Exception ex) {
+  public User create(@RequestBody User input) throws Exception {
+      User user = new User(input.getEmail(), input.getName(), input.getPassword());
 
-    }
-    return user;
+      try {
+          userDao.create(user);
+      } catch (Exception ex) { }
+
+      return user;
   }
   
   /**
@@ -55,7 +59,7 @@ public class UserController {
   /**
    * Retrieve the id for the user with the passed email address.
    */
-  @RequestMapping(value="api/user/find")
+  @RequestMapping(value="/find", method = RequestMethod.GET)
   @ResponseBody
   public User getByEmail(String email) throws Exception {
     // String userId;
@@ -95,17 +99,19 @@ public class UserController {
     return user;
   } 
 
-  @RequestMapping(value="api/user/login")
+  @RequestMapping(value="/login", method = RequestMethod.POST,
+          consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public User login(String email, String password) throws Exception {
-    User user = null;
-    try {
-      user = userDao.getByEmailAndPassword(email,password);
-    }
-    catch(Exception ex) {
-      throw new Exception(ex.getMessage());
-    }
-    return user;
+  public User login(@RequestBody User input) throws Exception {
+      User user = null;
+
+      try {
+          user = userDao.getByEmailAndPassword(input.getEmail(), input.getPassword());
+      } catch(Exception ex) {
+          throw new Exception(ex.getMessage());
+      }
+
+      return user;
   }
 
   // ------------------------
