@@ -46,6 +46,8 @@ public class OrderDao {
     logger.info("> create new order");
     System.out.println(user.getOrderNumber());
     System.out.println(user.getCreated());
+    Farmer petani = findFarmer(user);
+    user.setFarmer(petani);
     entityManager.persist(user);
     logger.info("< create new order ");
     return;

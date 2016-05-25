@@ -48,7 +48,7 @@ public class OrderController {
         obj.put("ordernumber","Stock not ready, order not made");
         return obj;
       }
-   		int harga = sayur.getPrice() * quantity;
+   		int harga = Math.abs(sayur.getPrice() * quantity);
       token = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(0,5);
       System.out.println(pembeli.getEmail());
       System.out.println(sayur.getName());
