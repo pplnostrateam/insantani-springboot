@@ -25,43 +25,16 @@ public class OrderController {
 
   @RequestMapping(value = "api/order", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
-  public JSONObject createOrder(@RequestBody Map<String, String> payload) {
+  public Order createOrder(@RequestBody Order payload) {
+      Order order = new Order(payload.getUser(), payload.getVegetable(), payload.getLocation(),
+              payload.getLatitude(), payload.getLongitude(), payload.getNote(), payload.getPrice(),
+              payload.getToken(), payload.getQuantity());
 
-    JSONObject obj = new JSONObject();
-    System.out.println("payload " + payload );
+      try {
+          orderDao.create(order);
+      } catch (Exception ex) { }
 
-    long user = Long.parseLong(payload.get("user"));
-    int vegetable = Integer.parseInt(payload.get("vegetable"));
-    String location = payload.get("location");
-    double latitude = Double.parseDouble(payload.get("latitude"));
-    double longitude = Double.parseDouble(payload.get("longitude"));
-    int quantity = Integer.parseInt(payload.get("quantity"));
-    String note = payload.get("note");
-    Order order;
-    String token;
-
-
-   	try{
-   		User pembeli = userDao.getById(user); 
-   		Vegetable sayur = vegetableDao.getById(vegetable);
-      if(sayur.getStock() < quantity) {
-        obj.put("ordernumber","Stock not ready, order not made");
-        return obj;
-      }
-   		int harga = sayur.getPrice() * quantity;
-      token = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(0,5);
-      System.out.println(pembeli.getEmail());
-      System.out.println(sayur.getName());
-   		order = new Order(pembeli, sayur,
-     	location, latitude, longitude, note, harga, token, quantity);
-    //  findFarmer(order); //set farmer for order
-   		orderDao.create(order);//insert to database
-      obj.put("ordernumber",token);
-   	}
-   	catch (Exception ex) {
-   		obj.put("ordernumber","Sorry failed to create order");
-    }
-    return obj;
+      return order;
   }
 
 /*

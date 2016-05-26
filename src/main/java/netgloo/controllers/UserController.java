@@ -69,8 +69,7 @@ public class UserController {
       // userId = String.valueOf(user.getId());
     }
     catch (Exception ex) {
-      // return "User not found: " + ex.toString();
-      throw new Exception(ex.getMessage());
+      throw new UserNotFoundException();
     }
     // return "The user id is: " + userId;
     return user;
@@ -97,7 +96,7 @@ public class UserController {
     }
 
     return user;
-  } 
+  }
 
   @RequestMapping(value="/login", method = RequestMethod.POST,
           consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

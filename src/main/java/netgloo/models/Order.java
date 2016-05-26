@@ -78,6 +78,8 @@ public class Order {
         this.note = note;
         this.price = price;
         this.created = new Date();
+        this.quantity = quantity;
+        this.farmer = null;
     }
 
 
