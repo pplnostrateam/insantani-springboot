@@ -79,6 +79,9 @@ public class OrderController {
       if(order.getFarmer() == null) {
         System.out.println("Order dont have farmers failed");
         Farmer farmer = orderDao.findFarmer(order);
+        if(farmer == null) {
+          farmer = new Farmer("ads@yahoo.com","Budi Farm","asd","Depok","082216182934",-6.1234123,108.123124); 
+        }
         order.setFarmer(farmer);
         orderDao.update(order);
       }
