@@ -5,12 +5,10 @@ import netgloo.models.UserDao;
 
 import netgloo.models.Vegetable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Class UserController
@@ -35,7 +33,9 @@ public class UserController {
 
       try {
           userDao.create(user);
-      } catch (Exception ex) { }
+      } catch (Exception ex) {
+          throw new UserNotFoundException();
+      }
 
       return user;
   }
@@ -123,3 +123,8 @@ public class UserController {
   private UserDao userDao;
   
 } // class UserController
+
+@ResponseStatus(value= HttpStatus.NOT_FOUND, reason="No User Found")
+class UserNotFoundException extends RuntimeException {
+
+}
